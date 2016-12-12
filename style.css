@@ -1,0 +1,6 @@
+.card-div {
+    float: left;
+}
+.card-div:hover{
+    cursor: pointer;
+}
