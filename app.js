@@ -6,7 +6,7 @@ var points = 0;
 var attemps = 0;
 var template = document.getElementById('template'); 
 
-function createTemplate(){
+function fn_createTemplate(){
     for(var j = 0; j < 2; j++){
         for(var i = 0; i < difficult; i++){
             var div = document.createElement('div');
@@ -14,7 +14,8 @@ function createTemplate(){
             img.setAttribute('src','assets/cards/cover.png');
             div.appendChild(img);
             div.setAttribute('class', 'card-div')
-            var pair = getRandomPair();
+            div.setAttribute('onclick','fn_viewCard(event)');
+            var pair = fn_getRandomPair();
             div.classList.add(pair)
             div.setAttribute('data', pair)
             template.appendChild(div);
@@ -23,7 +24,7 @@ function createTemplate(){
     }
 }
 
-function getRandomPair(){
+function fn_getRandomPair(){
     var close = true;
     var pair = '';
     while(close){
@@ -37,64 +38,42 @@ function getRandomPair(){
     return pair;
 }
 
-
-function addListeners(){
-    var cardDivs = document.getElementsByClassName('card-div');
-    for(var i = 0; i < cardDivs.length; i++){
-         cardDivs[i].addEventListener('click', function(event) {
-            var selectedDiv = event.path[1];
-            var selectedImg = event.path[0];
-            attemps++;
-            if(!selectedDiv.classList.contains('active')){
-                //show pic
-                selectedDiv.classList.add('active');
-                selectedImg.setAttribute('src','assets/cards/' + selectedDiv.getAttribute('data') + '.png')
-                //timer to see the pics
-                window.setTimeout(function(){
-                    var activeCars = document.getElementsByClassName('active');
-                    if(activeCars.length > 1){
-                        console.log("return false");
-                    }
-                    if(activeCars.length == 2){
-                        if(activeCars[0].getAttribute('data') == activeCars[1].getAttribute('data')){
-                            activeCars[0].addEventListener('click', function(){ return false;});
-                            activeCars[1].addEventListener('click', function(){ return false;});
-                            points++;
-                            checkResult();
-                        }
-                        else{
-                            activeCars[0].firstChild.setAttribute('src','assets/cards/cover.png');
-                            activeCars[1].firstChild.setAttribute('src','assets/cards/cover.png');
-                            errors++;
-                        }    
-                        activeCars[0].classList.remove('active');
-                        activeCars[0].classList.remove('active');
-                    }
-                }, 1500);
-            }
-            else{
-                //set active
-                selectedDiv.classList.add('active');
-                selectedImg.setAttribute('src','assets/cards/' + selectedDiv.getAttribute('data') + '.png')
-            }
-        });
-    }
-}
-
-function checkResult(){
+function fn_checkResult(){
     if(points == difficult){
         alert("Ganaste! Lo lograste en " + attemps + " intentos y te equivocaste " + errors + " veces" );
     }
 }
 
-function setDisabled(){
-    var cardDivs = document.getElementsByClassName('card-div');
-    for(var i = 0; i < cardDivs.length; i++){
-        cardDivs[i].set
+
+function fn_viewCard(event){
+    var activeCards = document.getElementsByClassName('active');
+    if(activeCards.length >= 2){
+        return false;
+    }
+    event.target.classList.add('active');
+    var selectedDiv = event.path[1];
+    var selectedImg = event.path[0];
+    selectedImg.setAttribute('src','assets/cards/' + selectedDiv.getAttribute('data') + '.png')
+
+    if(activeCards.length == 2){
+        attemps++;
+        var card1 = activeCards[0].parentElement;
+        var card2 = activeCards[1].parentElement;
+        if(card1.getAttribute('data') == card2.getAttribute('data')){
+            card1.setAttribute('onclick','');
+            card2.setAttribute('onclick','');
+            points++;
+            fn_checkResult();
+        }
+        else{
+            card1.firstChild.setAttribute('src','assets/cards/cover.png');
+            card2.firstChild.setAttribute('src','assets/cards/cover.png');
+            errors++;
+        }
+        card1.classList.remove('active');
+        card2.classList.remove('active');
     }
 }
 
-//Crea template aleatoria
-createTemplate();
 
-addListeners();
+fn_createTemplate();
