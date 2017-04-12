@@ -1,6 +1,24 @@
-.card-div {
-    float: left;
+body{
+    height: 100vh;
 }
+
+#template{
+    width: 100%;
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.card-div{
+    height: 30vh;
+    padding: 10px;
+}
+
+.card-div img{
+    height:inherit;
+}
+
 .card-div:hover{
     cursor: pointer;
 }

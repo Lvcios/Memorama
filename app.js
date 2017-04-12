@@ -39,41 +39,44 @@ function getRandomPair(){
 
 
 function addListeners(){
-    for(var i = 0; i < template.childNodes.length; i++){
-         template.childNodes[i].addEventListener('click', function(event) {
-        var selectedDiv = event.path[1];
-        var selectedImg = event.path[0];
-        attemps++;
-        if(!selectedDiv.classList.contains('active')){
-            //show pic
-            selectedDiv.classList.add('active');
-            selectedImg.setAttribute('src','assets/cards/' + selectedDiv.getAttribute('data') + '.png')
-            //timer to see the pics
-            window.setTimeout(function(){
-                var activeCars = document.getElementsByClassName('active');
-                if(activeCars.length == 2){
-                    if(activeCars[0].getAttribute('data') == activeCars[1].getAttribute('data')){
-                        activeCars[0].addEventListener('click', function(){ return false;});
-                        activeCars[1].addEventListener('click', function(){ return false;});
-                        points++;
-                        checkResult();
+    var cardDivs = document.getElementsByClassName('card-div');
+    for(var i = 0; i < cardDivs.length; i++){
+         cardDivs[i].addEventListener('click', function(event) {
+            var selectedDiv = event.path[1];
+            var selectedImg = event.path[0];
+            attemps++;
+            if(!selectedDiv.classList.contains('active')){
+                //show pic
+                selectedDiv.classList.add('active');
+                selectedImg.setAttribute('src','assets/cards/' + selectedDiv.getAttribute('data') + '.png')
+                //timer to see the pics
+                window.setTimeout(function(){
+                    var activeCars = document.getElementsByClassName('active');
+                    if(activeCars.length > 1){
+                        console.log("return false");
                     }
-                    else{
-                        activeCars[0].firstChild.setAttribute('src','assets/cards/cover.png');
-                        activeCars[1].firstChild.setAttribute('src','assets/cards/cover.png');
-                        errors++;
+                    if(activeCars.length == 2){
+                        if(activeCars[0].getAttribute('data') == activeCars[1].getAttribute('data')){
+                            activeCars[0].addEventListener('click', function(){ return false;});
+                            activeCars[1].addEventListener('click', function(){ return false;});
+                            points++;
+                            checkResult();
+                        }
+                        else{
+                            activeCars[0].firstChild.setAttribute('src','assets/cards/cover.png');
+                            activeCars[1].firstChild.setAttribute('src','assets/cards/cover.png');
+                            errors++;
+                        }    
+                        activeCars[0].classList.remove('active');
+                        activeCars[0].classList.remove('active');
                     }
-
-                    activeCars[0].classList.remove('active');
-                    activeCars[0].classList.remove('active');
-                }
-            }, 1500);
-        }
-        else{
-            //set active
-            selectedDiv.classList.add('active');
-            selectedImg.setAttribute('src','assets/cards/' + selectedDiv.getAttribute('data') + '.png')
-        }
+                }, 1500);
+            }
+            else{
+                //set active
+                selectedDiv.classList.add('active');
+                selectedImg.setAttribute('src','assets/cards/' + selectedDiv.getAttribute('data') + '.png')
+            }
         });
     }
 }
@@ -84,7 +87,14 @@ function checkResult(){
     }
 }
 
+function setDisabled(){
+    var cardDivs = document.getElementsByClassName('card-div');
+    for(var i = 0; i < cardDivs.length; i++){
+        cardDivs[i].set
+    }
+}
 
-
+//Crea template aleatoria
 createTemplate();
+
 addListeners();
