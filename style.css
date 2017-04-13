@@ -10,15 +10,14 @@ body{
     align-items: stretch;
 }
 
-.card-div{
-    height: 30vh;
-    padding: 10px;
-}
-
-.card-div img{
+img{
     height:inherit;
 }
 
-.card-div:hover{
+.selectable:hover{
     cursor: pointer;
+}
+
+.forbbiden:hover{
+    cursor:not-allowed;
 }

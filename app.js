@@ -12,12 +12,12 @@ function fn_createTemplate(){
             var div = document.createElement('div');
             var img = document.createElement('img');
             img.setAttribute('src','assets/cards/cover.png');
-            div.appendChild(img);
-            div.setAttribute('class', 'card-div')
-            div.setAttribute('onclick','fn_viewCard(event)');
+            img.setAttribute('onclick','fn_viewCard(event)');
+            img.classList.add('selectable');
             var pair = fn_getRandomPair();
-            div.classList.add(pair)
+            img.setAttribute('data', pair)
             div.setAttribute('data', pair)
+            div.appendChild(img);
             template.appendChild(div);
         }
         renderedCards = [];
@@ -51,29 +51,39 @@ function fn_viewCard(event){
         return false;
     }
     event.target.classList.add('active');
-    var selectedDiv = event.path[1];
     var selectedImg = event.path[0];
-    selectedImg.setAttribute('src','assets/cards/' + selectedDiv.getAttribute('data') + '.png')
+    selectedImg.setAttribute('src','assets/cards/' + selectedImg.getAttribute('data') + '.png')
 
     if(activeCards.length == 2){
         attemps++;
-        var card1 = activeCards[0].parentElement;
-        var card2 = activeCards[1].parentElement;
-        if(card1.getAttribute('data') == card2.getAttribute('data')){
-            card1.setAttribute('onclick','');
-            card2.setAttribute('onclick','');
-            points++;
-            fn_checkResult();
-        }
-        else{
-            card1.firstChild.setAttribute('src','assets/cards/cover.png');
-            card2.firstChild.setAttribute('src','assets/cards/cover.png');
-            errors++;
-        }
-        card1.classList.remove('active');
-        card2.classList.remove('active');
+        var card1 = activeCards[0];
+        var card2 = activeCards[1];
+        window.setTimeout(function(){
+            if(card1.getAttribute('data') == card2.getAttribute('data')){
+                card1.setAttribute('onclick','');
+                card2.setAttribute('onclick','');
+                points++;
+                fn_checkResult();
+            }
+            else{
+                card1.setAttribute('src','assets/cards/cover.png');
+                card2.setAttribute('src','assets/cards/cover.png');
+                errors++;
+            }
+            card1.classList.remove('active');
+            card2.classList.remove('active');
+        },1500);
     }
 }
 
+function fn_setClass(inClass, outClass){
+    var activeCards = document.getElementsByTagName('IMG');
+    for(var i = 0; i < activeCards.length; i++){
+        if(!activeCards[i].classList.contains('active')){
+            activeCards[i].classList.remove(outClass);
+            activeCards[i].classList.add(inClass);
+        }
+    }
+}
 
 fn_createTemplate();
