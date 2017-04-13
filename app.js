@@ -18,6 +18,7 @@ function fn_createTemplate(){
             img.setAttribute('data', pair)
             div.setAttribute('data', pair)
             div.appendChild(img);
+            div.classList.add('card-container');
             template.appendChild(div);
         }
         renderedCards = [];
