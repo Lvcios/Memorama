@@ -1,9 +1,3 @@
-body{
-    height: 98vh;
-    display: flex;
-    justify-content: center;
-}
-
 #template{
     width: 100%;
     display: flex;

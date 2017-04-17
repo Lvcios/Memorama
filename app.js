@@ -73,7 +73,7 @@ function fn_viewCard(event){
             }
             card1.classList.remove('active');
             card2.classList.remove('active');
-        },1500);
+        },800);
     }
 }
 
