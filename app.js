@@ -7,21 +7,19 @@ var attemps = 0;
 var template = document.getElementById('template'); 
 
 function fn_createTemplate(){
-    for(var j = 0; j < 2; j++){
-        for(var i = 0; i < difficult; i++){
-            var div = document.createElement('div');
-            var img = document.createElement('img');
-            img.setAttribute('src','assets/cards/cover.png');
-            img.setAttribute('onclick','fn_viewCard(event)');
-            img.classList.add('selectable');
-            var pair = fn_getRandomPair();
-            img.setAttribute('data', pair)
-            div.setAttribute('data', pair)
-            div.appendChild(img);
-            div.classList.add('card-container');
-            template.appendChild(div);
-        }
-        renderedCards = [];
+    renderedCards = [];
+    for(var i = 0; i < difficult * 2; i++){
+        var div = document.createElement('div');
+        var img = document.createElement('img');
+        img.setAttribute('src','assets/cards/cover.png');
+        img.setAttribute('onclick','fn_viewCard(event)');
+        img.classList.add('selectable');
+        var pair = fn_getRandomPair();
+        img.setAttribute('data', pair)
+        div.setAttribute('data', pair)
+        div.appendChild(img);
+        div.classList.add('card-container');
+        template.appendChild(div);
     }
 }
 
@@ -31,7 +29,7 @@ function fn_getRandomPair(){
     while(close){
         var selected = Math.floor((Math.random() * difficult) + 1);
         pair = '00' + selected ;
-        if(renderedCards.indexOf(pair) == -1) {
+        if(renderedCards.filter(m => m == pair).length < 2){
             renderedCards.push(pair);
             close = false;
         }
@@ -52,8 +50,9 @@ function fn_viewCard(event){
         return false;
     }
     event.target.classList.add('active');
-    var selectedImg = event.path[0];
-    selectedImg.setAttribute('src','assets/cards/' + selectedImg.getAttribute('data') + '.png')
+    var selectedImg = event.target
+    
+    fn_flipCard(selectedImg);
 
     if(activeCards.length == 2){
         attemps++;
@@ -67,8 +66,8 @@ function fn_viewCard(event){
                 fn_checkResult();
             }
             else{
-                card1.setAttribute('src','assets/cards/cover.png');
-                card2.setAttribute('src','assets/cards/cover.png');
+                fn_flipCardBack(card1);
+                fn_flipCardBack(card2);
                 errors++;
             }
             card1.classList.remove('active');
@@ -85,6 +84,44 @@ function fn_setClass(inClass, outClass){
             activeCards[i].classList.add(inClass);
         }
     }
+}
+
+function fn_flipCard(selectedImg){
+    selectedImg.style.transition = 'opacity 0.3s ease';
+    selectedImg.style.opacity = '0';
+
+    setTimeout(() => {
+
+        selectedImg.setAttribute('src','assets/cards/' + selectedImg.getAttribute('data') + '.png')
+        // Step 3: Wait a frame, then fade back in
+        requestAnimationFrame(() => {
+            selectedImg.style.transition = 'opacity 0.3s ease';
+            selectedImg.style.opacity = '1';
+        });
+    }, 300); // Match CSS transition duration
+}
+
+function fn_flipCardBack(selectedImg){
+    selectedImg.style.transition = 'opacity 0.3s ease';
+    selectedImg.style.opacity = '0';
+
+    setTimeout(() => {
+
+        selectedImg.setAttribute('src','assets/cards/cover.png');
+        // Step 3: Wait a frame, then fade back in
+        requestAnimationFrame(() => {
+            selectedImg.style.transition = 'opacity 0.3s ease';
+            selectedImg.style.opacity = '1';
+        });
+    }, 300); // Match CSS transition duration
+}
+
+function fn_resolve(){
+    var cards = document.getElementsByClassName('selectable');
+    for(var i = 0; i < cards.length; i++){
+        fn_flipCard(cards[i]);
+    }
+
 }
 
 fn_createTemplate();
